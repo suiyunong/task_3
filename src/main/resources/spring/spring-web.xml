@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+
+    <!-- web下组件包括Controller扫描 -->
+    <context:component-scan base-package="cn.syn.chuilun.web" />
+<!-- 开启springMVC的注解驱动，使得url可以映射到对应的controller -->
+<mvc:annotation-driven/>
+<!-- 视图解析 -->
+<!--InternalResourceViewResolver：用于支持Servlet、JSP视图解析；-->
+<!--prefix和suffix：查找视图页面的前缀和后缀（前缀[逻辑视图名]后缀），
+比如传进来的逻辑视图名为hello，则该该jsp视图页面应该存放在“WEB-INF/jsp/hello.jsp”；-->
+<!--根据上面定义的规则，studentDisplay 的逻辑视图将委托给位于/WEB-INF/view/studentDisplay.jsp这个视图来实现。-->
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="prefix" value="/WEB-INF/views/" />
+    <property name="suffix" value=".jsp" />
+</bean>
+
+
+    <!--配置validator校验器-->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>message</value>
+            </list>
+        </property>
+        <property name="useCodeAsDefaultMessage" value="true"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="cacheSeconds" value="60"/>
+    </bean>
+
+
+
+<!--下面这两个validator配置是不能用的-->
+    <!--<mvc:annotation-driven validator="validator"/>-->
+    <!--<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">-->
+        <!--<property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>-->
+        <!--<property name="validationMessageSource" ref="messageSource"/>-->
+    <!--</bean>-->
+    <!--&lt;!&ndash; 校验错误信息配置文件 &ndash;&gt;-->
+    <!--<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">-->
+        <!--&lt;!&ndash; 资源文件名 &ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="basename" value="messages"/>&ndash;&gt;-->
+        <!--<property name="basenames">-->
+        <!--<list>-->
+        <!--<value>messages</value>-->
+        <!--&lt;!&ndash;<value>exceptions</value>&ndash;&gt;-->
+        <!--&lt;!&ndash;<value>windows</value>&ndash;&gt;-->
+        <!--</list>-->
+        <!--</property>-->
+        <!--&lt;!&ndash; 对资源文件内容缓存时间，单位秒 &ndash;&gt;-->
+        <!--<property name="fileEncodings" value="utf8"/>-->
+        <!--<property name="defaultEncoding" value="utf8"/>-->
+        <!--<property name="cacheSeconds" value="120"/>-->
+    <!--</bean>-->
+
+
+    <!--配置validator校验器-->
+    <!--<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">-->
+        <!--&lt;!&ndash; 校验器，使用hibernate校验器 &ndash;&gt;-->
+        <!--<property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>-->
+        <!--&lt;!&ndash; 指定校验使用的资源文件，在文件中配置校验错误信息，如果不指定则默认使用classpath下面的ValidationMessages.properties文件 &ndash;&gt;-->
+        <!--<property name="validationMessageSource" ref="MessageSource"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="MessageSource" class= "org.springframework.context.support.ReloadableResourceBundleMessageSource">-->
+        <!--&lt;!&ndash; 指定校验信息的资源文件的基本文件名称，不包括后缀，后缀默认是properties &ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="basename" value="messages"/>&ndash;&gt;-->
+        <!--<property name="basenames">-->
+            <!--<list>-->
+                <!--<value>messages</value>-->
+                <!--&lt;!&ndash;<value>exceptions</value>&ndash;&gt;-->
+                <!--&lt;!&ndash;<value>windows</value>&ndash;&gt;-->
+            <!--</list>-->
+        <!--</property>-->
+        <!--&lt;!&ndash; 指定文件的编码 &ndash;&gt;-->
+        <!--<property name="fileEncodings" value="utf8"></property>-->
+        <!--&lt;!&ndash; 对资源文件内容缓存的时间，单位秒 &ndash;&gt;-->
+        <!--<property name="cacheSeconds" value="120"></property>-->
+        <!--&lt;!&ndash;将validator注册到适配器中&ndash;&gt;-->
+        <!--<mvc:annotation-driven  conversion-service="conversionService" validator="validator"/>-->
+    <!--</bean>-->
+
+    <!-- AOP 注解方式 ；定义Aspect -->
+    <!-- 激活组件扫描功能,在包"com.example.aop及其子包下面自动扫描通过注解配置的组件-->
+    <context:component-scan base-package="cn.syn.chuilun.aop"/>
+    <!-- 启动AspectJ支持   只对扫描过的bean有效-->
+    <!--<aop:aspectj-autoproxy proxy-target-class="true" />-->
+    <aop:aspectj-autoproxy />
+    <bean id="DBAop" class="cn.syn.chuilun.aop.DBAop"/>
+    <aop:config>
+        <aop:pointcut id="DBPointcut" expression="execution(* cn.syn.chuilun.dao.*.*(..))" />
+        <!--<aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice" />-->
+        <aop:aspect ref="DBAop">
+            <!--【环绕通知】-->
+            <aop:around method="arroud" pointcut-ref="DBPointcut"/>
+            <!--【前置通知】 在目标方法之前执行-->
+            <aop:before method="beginTransaction" pointcut-ref="DBPointcut" />
+            <!--【后置通知】-->
+            <aop:after method="commit" pointcut-ref="DBPointcut"/>
+            <!-- 【返回后通知】 -->
+            <aop:after-returning method="afterReturing" pointcut-ref="DBPointcut"/>
+            <!-- 异常通知 -->
+            <aop:after-throwing method="afterThrowing" pointcut-ref="DBPointcut"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>

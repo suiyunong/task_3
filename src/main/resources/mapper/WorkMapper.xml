@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.syn.chuilun.dao.WorkMapper" >
+  <resultMap id="BaseResultMap" type="cn.syn.chuilun.model.Work" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_at" property="createAt" jdbcType="BIGINT" />
+    <result column="update_at" property="updateAt" jdbcType="BIGINT" />
+    <result column="artist_id" property="artistId" jdbcType="BIGINT" />
+    <result column="intro" property="intro" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="editor_id" property="editorId" jdbcType="BIGINT" />
+    <result column="thumbnail_url" property="thumbnailUrl" jdbcType="VARCHAR" />
+    <result column="detail_url" property="detailUrl" jdbcType="VARCHAR" />
+    <result column="video_url" property="videoUrl" jdbcType="VARCHAR" />
+    <result column="banner" property="banner" jdbcType="INTEGER" />
+    <result column="collection_id" property="collectionId" jdbcType="BIGINT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="cn.syn.chuilun.model.Work" extends="BaseResultMap" >
+    <result column="comment" property="comment" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_at, update_at, artist_id, intro, status, editor_id, thumbnail_url, detail_url, 
+    video_url, banner, collection_id
+  </sql>
+  <sql id="Blob_Column_List" >
+    comment
+  </sql>
+  <select id="selectById" resultType="cn.syn.chuilun.model.Work" parameterType="java.lang.Long" >
+    select *
+    from work
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from work
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <!--<insert id="insert" parameterType="cn.syn.chuilun.model.Work" >-->
+    <!--insert into work (id, create_at, update_at, -->
+      <!--artist_id, intro, status, -->
+      <!--editor_id, thumbnail_url, detail_url, -->
+      <!--video_url, banner, collection_id, -->
+      <!--comment)-->
+    <!--values (#{id,jdbcType=BIGINT}, #{createAt,jdbcType=BIGINT}, #{updateAt,jdbcType=BIGINT}, -->
+      <!--#{artistId,jdbcType=BIGINT}, #{intro,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, -->
+      <!--#{editorId,jdbcType=BIGINT}, #{thumbnailUrl,jdbcType=VARCHAR}, #{detailUrl,jdbcType=VARCHAR}, -->
+      <!--#{videoUrl,jdbcType=VARCHAR}, #{banner,jdbcType=INTEGER}, #{collectionId,jdbcType=BIGINT}, -->
+      <!--#{comment,jdbcType=LONGVARCHAR})-->
+  <!--</insert>-->
+  <insert id="insert" parameterType="cn.syn.chuilun.model.Work" >
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      select LAST_INSERT_ID()
+    </selectKey>
+    insert into work
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
+      <if test="updateAt != null" >
+        update_at,
+      </if>
+      <if test="artistId != null" >
+        artist_id,
+      </if>
+      <if test="intro != null" >
+        intro,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="editorId != null" >
+        editor_id,
+      </if>
+      <if test="thumbnailUrl != null" >
+        thumbnail_url,
+      </if>
+      <if test="detailUrl != null" >
+        detail_url,
+      </if>
+      <if test="videoUrl != null" >
+        video_url,
+      </if>
+      <if test="banner != null" >
+        banner,
+      </if>
+      <if test="collectionId != null" >
+        collection_id,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=BIGINT},
+      </if>
+      <if test="updateAt != null" >
+        #{updateAt,jdbcType=BIGINT},
+      </if>
+      <if test="artistId != null" >
+        #{artistId,jdbcType=BIGINT},
+      </if>
+      <if test="intro != null" >
+        #{intro,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="editorId != null" >
+        #{editorId,jdbcType=BIGINT},
+      </if>
+      <if test="thumbnailUrl != null" >
+        #{thumbnailUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="detailUrl != null" >
+        #{detailUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="videoUrl != null" >
+        #{videoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="banner != null" >
+        #{banner,jdbcType=INTEGER},
+      </if>
+      <if test="collectionId != null" >
+        #{collectionId,jdbcType=BIGINT},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="cn.syn.chuilun.model.Work" >
+    update work
+    <set >
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=BIGINT},
+      </if>
+      <if test="updateAt != null" >
+        update_at = #{updateAt,jdbcType=BIGINT},
+      </if>
+      <if test="artistId != null" >
+        artist_id = #{artistId,jdbcType=BIGINT},
+      </if>
+      <if test="intro != null" >
+        intro = #{intro,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="editorId != null" >
+        editor_id = #{editorId,jdbcType=BIGINT},
+      </if>
+      <if test="thumbnailUrl != null" >
+        thumbnail_url = #{thumbnailUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="detailUrl != null" >
+        detail_url = #{detailUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="videoUrl != null" >
+        video_url = #{videoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="banner != null" >
+        banner = #{banner,jdbcType=INTEGER},
+      </if>
+      <if test="collectionId != null" >
+        collection_id = #{collectionId,jdbcType=BIGINT},
+      </if>
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <!--<update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.syn.chuilun.model.Work" >-->
+    <!--update work-->
+    <!--set create_at = #{createAt,jdbcType=BIGINT},-->
+      <!--update_at = #{updateAt,jdbcType=BIGINT},-->
+      <!--artist_id = #{artistId,jdbcType=BIGINT},-->
+      <!--intro = #{intro,jdbcType=VARCHAR},-->
+      <!--status = #{status,jdbcType=INTEGER},-->
+      <!--editor_id = #{editorId,jdbcType=BIGINT},-->
+      <!--thumbnail_url = #{thumbnailUrl,jdbcType=VARCHAR},-->
+      <!--detail_url = #{detailUrl,jdbcType=VARCHAR},-->
+      <!--video_url = #{videoUrl,jdbcType=VARCHAR},-->
+      <!--banner = #{banner,jdbcType=INTEGER},-->
+      <!--collection_id = #{collectionId,jdbcType=BIGINT},-->
+      <!--comment = #{comment,jdbcType=LONGVARCHAR}-->
+    <!--where id = #{id,jdbcType=BIGINT}-->
+  <!--</update>-->
+  <!--<update id="updateByPrimaryKey" parameterType="cn.syn.chuilun.model.Work" >-->
+    <!--update work-->
+    <!--set create_at = #{createAt,jdbcType=BIGINT},-->
+      <!--update_at = #{updateAt,jdbcType=BIGINT},-->
+      <!--artist_id = #{artistId,jdbcType=BIGINT},-->
+      <!--intro = #{intro,jdbcType=VARCHAR},-->
+      <!--status = #{status,jdbcType=INTEGER},-->
+      <!--editor_id = #{editorId,jdbcType=BIGINT},-->
+      <!--thumbnail_url = #{thumbnailUrl,jdbcType=VARCHAR},-->
+      <!--detail_url = #{detailUrl,jdbcType=VARCHAR},-->
+      <!--video_url = #{videoUrl,jdbcType=VARCHAR},-->
+      <!--banner = #{banner,jdbcType=INTEGER},-->
+      <!--collection_id = #{collectionId,jdbcType=BIGINT}-->
+    <!--where id = #{id,jdbcType=BIGINT}-->
+  <!--</update>-->
+  <update id="updateCollecValue">
+    UPDATE work
+    SET ${key}=#{value}
+    WHERE id=#{id}
+  </update>
+  <update id="setUp">
+    UPDATE work
+    SET status=1
+    WHERE id=#{id}
+  </update>
+  <update id="setDown">
+    UPDATE work
+    SET status=0
+    WHERE id=#{id}
+  </update>
+  <select id="selectAllWorks" resultType="cn.syn.chuilun.model.Work">
+  SELECT * FROM work
+</select>
+  <select id="selectBannerWorks" resultType="cn.syn.chuilun.model.Work">
+     SELECT *
+        FROM work
+        WHERE banner = 1;
+  </select>
+
+  <update id="setUpBanner">
+    UPDATE work
+    SET banner = 1
+    WHERE id = #{id}
+  </update>
+
+  <update id="setDownBanner">
+    UPDATE work
+    SET banner = 0
+    WHERE id = #{id}
+  </update>
+  <select id="selectWorkListByKeyValue" resultType="cn.syn.chuilun.model.Work">
+    SELECT *
+    FROM WORK
+    WHERE ${key} = #{value}
+  </select>
+
+</mapper>
