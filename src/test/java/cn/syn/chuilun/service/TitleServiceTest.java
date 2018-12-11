@@ -42,11 +42,16 @@ public class TitleServiceTest extends BaseTest{
 
     @Test
     public void updateTitleUrl() {
-
+        String name = "二级标题";
+        String url = "https://blog.csdn.net/shouldnotappearcalm/article/details/54381408";
+        titleService.updateTitleUrl(name, url);
     }
 
     @Test
     public void updateTitleLevel() {
+        String name = "二级标题";
+        int level = 2;
+        titleService.updateTitleLevel(name, level);
     }
 
     @Test

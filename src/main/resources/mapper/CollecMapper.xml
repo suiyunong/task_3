@@ -14,7 +14,7 @@
   <sql id="Base_Column_List" >
     id, type, create_at, update_at, name, status, editor_id, artist_id
   </sql>
-  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectById" resultType="cn.syn.chuilun.model.Collec" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from collec
@@ -117,15 +117,15 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="setUp">
+  <update id="setUp" parameterType="java.lang.Long">
     UPDATE collec
     SET status=1
     WHERE id=#{id}
   </update>
-<update id="setDown">
+<update id="setDown" parameterType="java.lang.Long">
   UPDATE collec
   SET status=0
-  WHERE id#{id}
+  WHERE id=#{id}
 </update>
 
   <select id="selectCollecListByName" resultType="cn.syn.chuilun.model.Collec">
